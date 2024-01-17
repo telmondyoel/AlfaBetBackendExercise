@@ -1,7 +1,13 @@
+using AlfaBetBackendExercise.Database.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AlfaBetContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AlfaBetContext")));
 
 var app = builder.Build();
 
