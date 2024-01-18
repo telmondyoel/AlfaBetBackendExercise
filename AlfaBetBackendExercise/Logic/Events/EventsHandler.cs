@@ -3,7 +3,7 @@ using AlfaBetBackendExercise.Database.Context;
 using AlfaBetBackendExercise.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlfaBetBackendExercise.Logic;
+namespace AlfaBetBackendExercise.Logic.Events;
 
 public class EventsHandler
 {
@@ -32,9 +32,17 @@ public class EventsHandler
         return eventToCreate;
     }
 
-    public async Task<IEnumerable<Event>> RetrieveAllEventsAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Event>> RetrieveEventsAsync(RetrieveEventsRequest request,
+        CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Events.AsNoTracking().ToListAsync(cancellationToken);
+        IQueryable<Event> retrieveEventsQuery = _dbContext.Events.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(request.LocationFilter))
+        {
+            retrieveEventsQuery = retrieveEventsQuery.Where(e => EF.Functions.ILike(e.Location, $"%{request.LocationFilter}%"));
+        }
+
+        return await retrieveEventsQuery.ToListAsync(cancellationToken);
     }
 
     public async Task<Event?> RetrieveEventAsync(int eventId, CancellationToken cancellationToken = default)

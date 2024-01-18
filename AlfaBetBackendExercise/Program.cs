@@ -1,6 +1,6 @@
 using AlfaBetBackendExercise.Authentication;
 using AlfaBetBackendExercise.Database.Context;
-using AlfaBetBackendExercise.Logic;
+using AlfaBetBackendExercise.Logic.Events;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

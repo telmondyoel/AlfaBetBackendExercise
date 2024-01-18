@@ -1,6 +1,6 @@
 using AlfaBetBackendExercise.Contracts;
 using AlfaBetBackendExercise.Database.Entities;
-using AlfaBetBackendExercise.Logic;
+using AlfaBetBackendExercise.Logic.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,9 +27,15 @@ public class EventsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Event>> RetrieveEvents(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Event>> RetrieveEvents(string? locationFilter,
+        CancellationToken cancellationToken = default)
     {
-        return await _eventsHandler.RetrieveAllEventsAsync(cancellationToken);
+        RetrieveEventsRequest request = new()
+        {
+            LocationFilter = locationFilter
+        };
+
+        return await _eventsHandler.RetrieveEventsAsync(request, cancellationToken);
     }
 
     [HttpGet("{eventId:int}")]
