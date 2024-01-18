@@ -1,10 +1,12 @@
 using AlfaBetBackendExercise.Contracts;
 using AlfaBetBackendExercise.Database.Entities;
 using AlfaBetBackendExercise.Logic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlfaBetBackendExercise.Controllers;
 
+[Authorize]
 [Route("events")]
 [ApiController]
 public class EventsController : ControllerBase
