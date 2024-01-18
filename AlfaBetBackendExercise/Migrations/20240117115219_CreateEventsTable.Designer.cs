@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AlfaBetBackendExercise.Migrations
 {
-    [DbContext(typeof(AlfaBetContext))]
+    [DbContext(typeof(AlfaBetDbContext))]
     [Migration("20240117115219_CreateEventsTable")]
     partial class CreateEventsTable
     {

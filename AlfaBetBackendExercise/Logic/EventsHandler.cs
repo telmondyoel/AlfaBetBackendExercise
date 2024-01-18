@@ -7,9 +7,9 @@ namespace AlfaBetBackendExercise.Logic;
 
 public class EventsHandler
 {
-    private readonly AlfaBetContext _dbContext;
+    private readonly AlfaBetDbContext _dbContext;
 
-    public EventsHandler(AlfaBetContext dbContext)
+    public EventsHandler(AlfaBetDbContext dbContext)
     {
         _dbContext = dbContext;
     }

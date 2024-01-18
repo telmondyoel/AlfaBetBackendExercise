@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AlfaBetBackendExercise.Migrations
 {
-    [DbContext(typeof(AlfaBetContext))]
+    [DbContext(typeof(AlfaBetDbContext))]
     partial class AlfaBetContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

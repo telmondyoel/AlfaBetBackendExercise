@@ -8,8 +8,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<EventsHandler>();
-builder.Services.AddDbContext<AlfaBetContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AlfaBetContext")));
+builder.Services.AddDbContext<AlfaBetDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AlfaBetDb")));
 
 builder.Services.AddControllers();
 
