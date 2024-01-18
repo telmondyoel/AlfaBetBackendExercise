@@ -28,11 +28,15 @@ public class EventsController : ControllerBase
 
     [HttpGet]
     public async Task<IEnumerable<Event>> RetrieveEvents(string? locationFilter,
+        RetrieveEventsSortBy? sortBy,
+        RetrieveEventsSortOrder sortOrder = RetrieveEventsSortOrder.Ascending,
         CancellationToken cancellationToken = default)
     {
         RetrieveEventsRequest request = new()
         {
-            LocationFilter = locationFilter
+            LocationFilter = locationFilter,
+            SortBy = sortBy,
+            SortOrder = sortOrder
         };
 
         return await _eventsHandler.RetrieveEventsAsync(request, cancellationToken);

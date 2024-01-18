@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AlfaBetBackendExercise.Contracts;
 using AlfaBetBackendExercise.Database.Context;
 using AlfaBetBackendExercise.Database.Entities;
@@ -42,6 +43,15 @@ public class EventsHandler
             retrieveEventsQuery = retrieveEventsQuery.Where(e => EF.Functions.ILike(e.Location, $"%{request.LocationFilter}%"));
         }
 
+        Expression<Func<Event, object>> eventColumnSelector = EventSortByColumnSelector(request.SortBy);
+
+        retrieveEventsQuery = request.SortOrder switch
+        {
+            RetrieveEventsSortOrder.Asc or RetrieveEventsSortOrder.Ascending => retrieveEventsQuery.OrderBy(eventColumnSelector),
+            RetrieveEventsSortOrder.Desc or RetrieveEventsSortOrder.Descending => retrieveEventsQuery.OrderByDescending(eventColumnSelector),
+            _ => throw new ArgumentOutOfRangeException(nameof(request.SortOrder), "This really shouldn't have been possible")
+        };
+
         return await retrieveEventsQuery.ToListAsync(cancellationToken);
     }
 
@@ -75,4 +85,12 @@ public class EventsHandler
         int deletedEvents = await _dbContext.Events.Where(e => e.Id == eventId).ExecuteDeleteAsync(cancellationToken);
         return deletedEvents > 0;
     }
+
+    private static Expression<Func<Event, object>> EventSortByColumnSelector(RetrieveEventsSortBy? sortBy) => sortBy switch
+    {
+        RetrieveEventsSortBy.Date => e => e.Date,
+        RetrieveEventsSortBy.Popularity => e => e.ParticipantsAmount ?? int.MinValue,
+        RetrieveEventsSortBy.CreationDate => e => e.CreationDate,
+        _ => e => e.Id
+    };
 }
