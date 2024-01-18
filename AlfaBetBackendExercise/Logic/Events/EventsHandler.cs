@@ -15,15 +15,15 @@ public class EventsHandler
         _dbContext = dbContext;
     }
 
-    public async Task<Event> ScheduleEventAsync(ScheduleEventContract scheduleEvent,
+    public async Task<Event> ScheduleEventAsync(ScheduleEventRequest scheduleEventRequest,
         CancellationToken cancellationToken = default)
     {
         Event eventToCreate = new()
         {
-            Summary = scheduleEvent.Summary,
-            Location = scheduleEvent.Location,
-            Date = scheduleEvent.Date.UtcDateTime,
-            ParticipantsAmount = scheduleEvent.Participants,
+            Summary = scheduleEventRequest.Summary,
+            Location = scheduleEventRequest.Location,
+            Date = scheduleEventRequest.Date.UtcDateTime,
+            ParticipantsAmount = scheduleEventRequest.Participants,
             CreationDate = DateTimeOffset.Now.UtcDateTime
         };
 
@@ -60,7 +60,7 @@ public class EventsHandler
         return await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
     }
 
-    public async Task<Event?> UpdateEventAsync(int eventId, UpdateEventContract updateEvent,
+    public async Task<Event?> UpdateEventAsync(int eventId, UpdateEventRequest updateEventRequest,
         CancellationToken cancellationToken = default)
     {
         Event? eventToUpdate = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
@@ -70,10 +70,10 @@ public class EventsHandler
             return eventToUpdate;
         }
 
-        eventToUpdate.Summary = updateEvent.Summary;
-        eventToUpdate.Location = updateEvent.Location;
-        eventToUpdate.Date = updateEvent.Date.UtcDateTime;
-        eventToUpdate.ParticipantsAmount = updateEvent.Participants;
+        eventToUpdate.Summary = updateEventRequest.Summary;
+        eventToUpdate.Location = updateEventRequest.Location;
+        eventToUpdate.Date = updateEventRequest.Date.UtcDateTime;
+        eventToUpdate.ParticipantsAmount = updateEventRequest.Participants;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

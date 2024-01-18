@@ -1,6 +1,6 @@
 namespace AlfaBetBackendExercise.Contracts;
 
-public record UpdateEventContract(
+public record UpdateEventRequest(
     string Summary,
     string Location,
     DateTimeOffset Date,

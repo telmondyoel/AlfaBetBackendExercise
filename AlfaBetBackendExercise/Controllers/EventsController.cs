@@ -19,10 +19,10 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> ScheduleEvent([FromBody] ScheduleEventContract scheduleEvent,
+    public async Task<IActionResult> ScheduleEvent([FromBody] ScheduleEventRequest scheduleEventRequest,
         CancellationToken cancellationToken = default)
     {
-        Event createdEvent = await _eventsHandler.ScheduleEventAsync(scheduleEvent, cancellationToken);
+        Event createdEvent = await _eventsHandler.ScheduleEventAsync(scheduleEventRequest, cancellationToken);
         return CreatedAtAction(nameof(ScheduleEvent), createdEvent);
     }
 
@@ -55,10 +55,10 @@ public class EventsController : ControllerBase
 
     [HttpPut("{eventId:int}")]
     public async Task<IActionResult> UpdateEvent(int eventId,
-        [FromBody] UpdateEventContract updateEvent,
+        [FromBody] UpdateEventRequest updateEventRequest,
         CancellationToken cancellationToken = default)
     {
-        if (await _eventsHandler.UpdateEventAsync(eventId, updateEvent, cancellationToken) is { } updatedEvent)
+        if (await _eventsHandler.UpdateEventAsync(eventId, updateEventRequest, cancellationToken) is { } updatedEvent)
         {
             return Ok(updatedEvent);
         }
