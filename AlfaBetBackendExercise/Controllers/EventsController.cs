@@ -1,5 +1,4 @@
 using AlfaBetBackendExercise.Contracts;
-using AlfaBetBackendExercise.Database.Entities;
 using AlfaBetBackendExercise.Logic.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +21,12 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> ScheduleEvent([FromBody] ScheduleEventRequest scheduleEventRequest,
         CancellationToken cancellationToken = default)
     {
-        Event createdEvent = await _eventsHandler.ScheduleEventAsync(scheduleEventRequest, cancellationToken);
+        EventViewResponse createdEvent = await _eventsHandler.ScheduleEventAsync(scheduleEventRequest, cancellationToken);
         return CreatedAtAction(nameof(ScheduleEvent), createdEvent);
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Event>> RetrieveEvents(string? locationFilter,
+    public async Task<IEnumerable<EventViewResponse>> RetrieveEvents(string? locationFilter,
         RetrieveEventsSortBy? sortBy,
         RetrieveEventsSortOrder sortOrder = RetrieveEventsSortOrder.Ascending,
         CancellationToken cancellationToken = default)

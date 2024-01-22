@@ -15,7 +15,7 @@ public class EventsHandler
         _dbContext = dbContext;
     }
 
-    public async Task<Event> ScheduleEventAsync(ScheduleEventRequest scheduleEventRequest,
+    public async Task<EventViewResponse> ScheduleEventAsync(ScheduleEventRequest scheduleEventRequest,
         CancellationToken cancellationToken = default)
     {
         Event eventToCreate = new()
@@ -30,10 +30,10 @@ public class EventsHandler
         await _dbContext.Events.AddAsync(eventToCreate, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return eventToCreate;
+        return EventViewResponse.FromEventEntity(eventToCreate);
     }
 
-    public async Task<IEnumerable<Event>> RetrieveEventsAsync(RetrieveEventsRequest request,
+    public async Task<IEnumerable<EventViewResponse>> RetrieveEventsAsync(RetrieveEventsRequest request,
         CancellationToken cancellationToken = default)
     {
         IQueryable<Event> retrieveEventsQuery = _dbContext.Events.AsNoTracking();
@@ -52,22 +52,29 @@ public class EventsHandler
             _ => throw new ArgumentOutOfRangeException(nameof(request.SortOrder), "This really shouldn't have been possible")
         };
 
-        return await retrieveEventsQuery.ToListAsync(cancellationToken);
+        List<Event> retrievedEvents = await retrieveEventsQuery.ToListAsync(cancellationToken);
+
+        return retrievedEvents.Select(EventViewResponse.FromEventEntity);
     }
 
-    public async Task<Event?> RetrieveEventAsync(int eventId, CancellationToken cancellationToken = default)
+    public async Task<EventViewResponse?> RetrieveEventAsync(int eventId, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+        if (await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken) is { } retrievedEvent)
+        {
+            return EventViewResponse.FromEventEntity(retrievedEvent);
+        }
+
+        return null;
     }
 
-    public async Task<Event?> UpdateEventAsync(int eventId, UpdateEventRequest updateEventRequest,
+    public async Task<EventViewResponse?> UpdateEventAsync(int eventId, UpdateEventRequest updateEventRequest,
         CancellationToken cancellationToken = default)
     {
         Event? eventToUpdate = await _dbContext.Events.FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
 
         if (eventToUpdate is null)
         {
-            return eventToUpdate;
+            return null;
         }
 
         eventToUpdate.Summary = updateEventRequest.Summary;
@@ -77,7 +84,7 @@ public class EventsHandler
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return eventToUpdate;
+        return EventViewResponse.FromEventEntity(eventToUpdate);
     }
 
     public async Task<bool> DeleteEventAsync(int eventId, CancellationToken cancellationToken = default)
