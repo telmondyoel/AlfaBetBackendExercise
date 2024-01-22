@@ -17,4 +17,5 @@ public class Event
     public DateTime Date { get; set; }
     public int? ParticipantsAmount { get; set; }
     public DateTime CreationDate { get; set; }
+    public bool ReminderTriggered { get; set; } = false;
 }
