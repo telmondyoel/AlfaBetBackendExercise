@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<EventsHandler>();
 
 builder.Services.AddDbContext<AlfaBetDbContext>(options =>

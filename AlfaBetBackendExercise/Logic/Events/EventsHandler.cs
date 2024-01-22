@@ -9,10 +9,12 @@ namespace AlfaBetBackendExercise.Logic.Events;
 public class EventsHandler
 {
     private readonly AlfaBetDbContext _dbContext;
+    private readonly TimeProvider _timeProvider;
 
-    public EventsHandler(AlfaBetDbContext dbContext)
+    public EventsHandler(AlfaBetDbContext dbContext, TimeProvider timeProvider)
     {
         _dbContext = dbContext;
+        _timeProvider = timeProvider;
     }
 
     public async Task<EventViewResponse> ScheduleEventAsync(ScheduleEventRequest scheduleEventRequest,
@@ -24,7 +26,7 @@ public class EventsHandler
             Location = scheduleEventRequest.Location,
             Date = scheduleEventRequest.Date.UtcDateTime,
             ParticipantsAmount = scheduleEventRequest.Participants,
-            CreationDate = DateTimeOffset.Now.UtcDateTime
+            CreationDate = _timeProvider.GetUtcNow().UtcDateTime
         };
 
         await _dbContext.Events.AddAsync(eventToCreate, cancellationToken);
