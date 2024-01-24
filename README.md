@@ -68,6 +68,15 @@ If the login session expires, you can simply login again to receive a new `acces
 
 ---
 
+### Reminders
+
+Reminders are simulated, and if a reminder needs to be "sent", it will simply be printed to the console. <br>
+However, regardless of the simulated-ness, the architecture for implementing additional "reminder sinks" was kept in mind with the Open/Closed SOLID
+principle. <br>
+For instance, an `EmailEventReminderSink` class could be easily written to send out emails to people subscribed to events.
+
+---
+
 ### Api documentation
 
 [See here](AlfaBetBackendExercise/Documentation/apis.md) for the full api documentation
